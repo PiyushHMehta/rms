@@ -1,5 +1,6 @@
 package com.zeta.suite;
 
+import com.zeta.service.TableServiceTest;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
@@ -13,7 +14,8 @@ import com.zeta.service.OrderServiceTest;
         FileTableDAOTest.class,
         InMemoryOrderDAOTest.class,
         KitchenServiceTest.class,
-        OrderServiceTest.class
+        OrderServiceTest.class,
+        TableServiceTest.class,
 })
 public class RestaurantTestSuite {
 }

@@ -10,12 +10,11 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class InMemoryOrderDAOTest {
-
+public class InMemoryOrderDAOTest {
     private InMemoryOrderDAO orderDAO;
 
     @BeforeEach
@@ -51,8 +50,4 @@ class InMemoryOrderDAOTest {
 
         assertEquals(ORDER_STATUS.IN_PROGRESS, order.getOrderStatus());
     }
-
-
-
-
 }
