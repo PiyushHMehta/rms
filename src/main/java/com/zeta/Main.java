@@ -7,18 +7,23 @@ import com.zeta.dao.FileTableDAO;
 import com.zeta.dao.InMemoryOrderDAO;
 import com.zeta.dao.OrderDAO;
 import com.zeta.dao.TableDAO;
+import com.zeta.io.FileHandler;
+import com.zeta.io.LocalFileHandler;
 import com.zeta.service.KitchenService;
 import com.zeta.service.OrderService;
 import com.zeta.service.TableService;
 import com.zeta.view.CustomerConsole;
 import com.zeta.view.MenuCatalog;
 
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
-        TableDAO tableDAO = new FileTableDAO("/Users/piyushm/IdeaProjects/rms/tables.txt");
+        String tablePath = Paths.get("tables.txt").toAbsolutePath().toString();
+        FileHandler fileHandler = new LocalFileHandler(tablePath);
+        TableDAO tableDAO = new FileTableDAO(fileHandler);
         OrderDAO orderDAO = new InMemoryOrderDAO();
 
         TableService tableService = new TableService(tableDAO);

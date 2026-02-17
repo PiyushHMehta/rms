@@ -1,5 +1,6 @@
 package com.zeta.dao;
 
+import com.zeta.io.FileHandler;
 import com.zeta.model.Table;
 
 import java.io.*;
@@ -7,19 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileTableDAO implements TableDAO {
-    private final String filePath;
+//    private final String filePath;
+    private final FileHandler fileHandler;
 
-    private static final int SIZE = 10;
     // single lock shared across all instances
     private static final Object FILE_LOCK = new Object();
 
-    public FileTableDAO(String filePath) {
-        this.filePath = filePath;
+    public FileTableDAO(FileHandler fileHandler) {
+//        this.filePath = filePath;
+        this.fileHandler = fileHandler;
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
+//    public String getFilePath() {
+//        return filePath;
+//    }
 
     @Override
     public List<Table> getAllTables() {
@@ -27,7 +29,7 @@ public class FileTableDAO implements TableDAO {
             List<Table> tables = new ArrayList<>();
 
             // read table file, make table object and add in tables list
-            try(BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+            try(BufferedReader bufferedReader = fileHandler.getReader()) {
                 String line;
                 while((line = bufferedReader.readLine()) != null) {
                     String[] parts = line.split(",");
@@ -49,9 +51,18 @@ public class FileTableDAO implements TableDAO {
         synchronized(FILE_LOCK) {
             List<Table> tables = getAllTables();
 
-            for(int tableId: tableIds) {
-                if(tableId > SIZE) {
-                    System.out.println("Invalid choice");
+            for(int tableId : tableIds) {
+                boolean exists = false;
+
+                for (Table table : tables) {
+                    if (table.getId() == tableId) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) {
+                    System.out.println("Invalid table ID: " + tableId);
                     return false;
                 }
             }
@@ -95,11 +106,11 @@ public class FileTableDAO implements TableDAO {
         }
     }
 
-    private void saveAllTables(List<Table> tables) {
+    public void saveAllTables(List<Table> tables) {
         // write back updated table status to file
         synchronized(FILE_LOCK) {
-            File file = new File(filePath);
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+//            File file = new File(filePath);
+            try(BufferedWriter bufferedWriter = fileHandler.getWriter()) {
                 for(Table table: tables) {
                     String line = table.getId() + "," + table.getCapacity() + "," + table.isAvailable();
                     bufferedWriter.write(line);
