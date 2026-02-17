@@ -8,16 +8,69 @@ import java.util.List;
 public class TableService {
     private final TableDAO tableDAO;
 
+    // single lock shared across all instances
+    private static final Object FILE_LOCK = new Object();
+
     public TableService(TableDAO tableDAO) {
         this.tableDAO = tableDAO;
     }
 
-    public boolean lockTables(List<Integer> tablesIds) {
-        return tableDAO.lockTables(tablesIds);
+    public boolean lockTables(List<Integer> tableIds) {
+        synchronized(FILE_LOCK) {
+            List<Table> tables = getAllTables();
+
+            for(int tableId : tableIds) {
+                boolean exists = false;
+
+                for (Table table : tables) {
+                    if (table.getId() == tableId) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) {
+                    System.out.println("Invalid table ID: " + tableId);
+                    return false;
+                }
+            }
+
+            // check availability
+            for(Table table: tables) {
+                if(tableIds.contains(table.getId()) && !table.isAvailable()) {
+                    return false;
+                    // can't book, already booked table
+                }
+            }
+
+            // lock tables
+            for(Table table: tables) {
+                if(tableIds.contains(table.getId())) {
+                    table.lock();
+                }
+            }
+
+            // save updated tables
+            tableDAO.saveAllTables(tables);
+
+            return true;
+        }
     }
 
-    public void releaseTables(List<Integer> tablesIds) {
-        tableDAO.releaseTables(tablesIds);
+    public void releaseTables(List<Integer> tableIds) {
+        synchronized(FILE_LOCK) {
+            List<Table> tables = getAllTables();
+
+            // release tables
+            for(Table table: tables) {
+                if(tableIds.contains(table.getId())) {
+                    table.release();
+                }
+            }
+
+            // save updated tables
+            tableDAO.saveAllTables(tables);
+        }
     }
 
     public List<Table> getAllTables() {

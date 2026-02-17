@@ -33,16 +33,7 @@ public class InMemoryOrderDAO implements OrderDAO {
     public void updateStatus(int orderId, ORDER_STATUS status) {
         Order order = orderMap.get(orderId);
         if(order != null) {
-            switch(status) {
-                case IN_PROGRESS:
-                    order.markInProgress();
-                    break;
-                case PREPARED:
-                    order.markPrepared();
-                    break;
-                default:
-                    break;
-            }
+            order.setStatus(status);
         }
     }
 

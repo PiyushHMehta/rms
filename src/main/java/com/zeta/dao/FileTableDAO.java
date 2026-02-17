@@ -46,65 +46,65 @@ public class FileTableDAO implements TableDAO {
         }
     }
 
-    @Override
-    public boolean lockTables(List<Integer> tableIds) {
-        synchronized(FILE_LOCK) {
-            List<Table> tables = getAllTables();
+//    @Override
+//    public boolean lockTables(List<Integer> tableIds) {
+//        synchronized(FILE_LOCK) {
+//            List<Table> tables = getAllTables();
+//
+//            for(int tableId : tableIds) {
+//                boolean exists = false;
+//
+//                for (Table table : tables) {
+//                    if (table.getId() == tableId) {
+//                        exists = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (!exists) {
+//                    System.out.println("Invalid table ID: " + tableId);
+//                    return false;
+//                }
+//            }
+//
+//            // check availability
+//            for(Table table: tables) {
+//                if(tableIds.contains(table.getId()) && !table.isAvailable()) {
+//                    return false;
+//                    // can't book, already booked table
+//                }
+//            }
+//
+//            // lock tables
+//            for(Table table: tables) {
+//                if(tableIds.contains(table.getId())) {
+//                    table.lock();
+//                }
+//            }
+//
+//            // save updated tables
+//            saveAllTables(tables);
+//
+//            return true;
+//        }
+//    }
 
-            for(int tableId : tableIds) {
-                boolean exists = false;
-
-                for (Table table : tables) {
-                    if (table.getId() == tableId) {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (!exists) {
-                    System.out.println("Invalid table ID: " + tableId);
-                    return false;
-                }
-            }
-
-            // check availability
-            for(Table table: tables) {
-                if(tableIds.contains(table.getId()) && !table.isAvailable()) {
-                    return false;
-                    // can't book, already booked table
-                }
-            }
-
-            // lock tables
-            for(Table table: tables) {
-                if(tableIds.contains(table.getId())) {
-                    table.lock();
-                }
-            }
-
-            // save updated tables
-            saveAllTables(tables);
-
-            return true;
-        }
-    }
-
-    @Override
-    public void releaseTables(List<Integer> tableIds) {
-        synchronized(FILE_LOCK) {
-            List<Table> tables = getAllTables();
-
-            // release tables
-            for(Table table: tables) {
-                if(tableIds.contains(table.getId())) {
-                    table.release();
-                }
-            }
-
-            // save updated tables
-            saveAllTables(tables);
-        }
-    }
+//    @Override
+//    public void releaseTables(List<Integer> tableIds) {
+//        synchronized(FILE_LOCK) {
+//            List<Table> tables = getAllTables();
+//
+//            // release tables
+//            for(Table table: tables) {
+//                if(tableIds.contains(table.getId())) {
+//                    table.release();
+//                }
+//            }
+//
+//            // save updated tables
+//            saveAllTables(tables);
+//        }
+//    }
 
     public void saveAllTables(List<Table> tables) {
         // write back updated table status to file

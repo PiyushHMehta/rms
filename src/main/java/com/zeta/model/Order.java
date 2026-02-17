@@ -39,6 +39,10 @@ public class Order {
         this.orderStatus = ORDER_STATUS.PREPARED;
     }
 
+    public void setStatus(ORDER_STATUS status) {
+        this.orderStatus = status;
+    }
+
     public int getTotalPreparationTime() {
         int totalTime = 0;
         for(OrderItems item: orderItemsList) {
