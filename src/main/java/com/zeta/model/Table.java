@@ -1,24 +1,12 @@
 package com.zeta.model;
 
 public class Table {
-    public  int id;
-    public  int capacity;
+    public int id;
+    public int capacity;
     public boolean available;
 
     public Table() {
 
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     public Table(int id, int capacity, boolean available) {
