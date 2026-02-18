@@ -1,6 +1,7 @@
 package com.zeta.service;
 
 import com.zeta.dao.TableDAO;
+import com.zeta.logger.AppLogger;
 import com.zeta.model.Table;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class TableService {
                 }
 
                 if (!exists) {
-                    System.out.println("Invalid table ID: " + tableId);
+                    AppLogger.warning(String.format("Invalid table ID: %d", tableId));
                     return false;
                 }
             }
@@ -38,6 +39,7 @@ public class TableService {
             // check availability
             for(Table table: tables) {
                 if(tableIds.contains(table.getId()) && !table.isAvailable()) {
+                    AppLogger.info(String.format("Sorry, table already booked: %s", Thread.currentThread().getName()));
                     return false;
                     // can't book, already booked table
                 }
@@ -47,6 +49,7 @@ public class TableService {
             for(Table table: tables) {
                 if(tableIds.contains(table.getId())) {
                     table.lock();
+                    AppLogger.info(String.format("Table booked successfully: %s", Thread.currentThread().getName()));
                 }
             }
 

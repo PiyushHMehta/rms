@@ -1,5 +1,6 @@
 package com.zeta.concurrency;
 
+import com.zeta.logger.AppLogger;
 import com.zeta.model.Order;
 
 import java.util.concurrent.BlockingQueue;
@@ -10,7 +11,7 @@ public class OrderDispatcher {
 
     public void submitOrder(Order order) {
         incomingOrdersQueue.add(order);
-        System.out.println("Customer placed order: " + order.getId());
+        AppLogger.info(String.format("Customer placed order: %d", order.getId()));
     }
 
     public Order takeOrder() throws InterruptedException {

@@ -1,5 +1,6 @@
 package com.zeta.service;
 
+import com.zeta.logger.AppLogger;
 import com.zeta.model.Order;
 
 import java.util.concurrent.BlockingQueue;
@@ -10,7 +11,7 @@ public class KitchenService {
 
     public void submitOrder(Order order) {
         orderQueue.add(order);
-        System.out.println("Order submitted to kitchen: " + order.getId());
+        AppLogger.info(String.format("Order submitted to kitchen: %d", order.getId()));
     }
 
     public Order takeOrder() throws InterruptedException {

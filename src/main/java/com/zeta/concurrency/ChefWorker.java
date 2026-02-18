@@ -1,5 +1,6 @@
 package com.zeta.concurrency;
 
+import com.zeta.logger.AppLogger;
 import com.zeta.model.ORDER_STATUS;
 import com.zeta.model.Order;
 import com.zeta.service.KitchenService;
@@ -19,10 +20,10 @@ public class ChefWorker implements Runnable {
         while(true) {
             try {
                 Order order = kitchenService.takeOrder();
-                System.out.println("Chef {" + Thread.currentThread().getName() + "}" + " started preparing order: " + order.getId());
+                AppLogger.info(String.format("Chef {%s} started preparing order: %d", Thread.currentThread().getName(), order.getId()));
                 Thread.sleep(order.getTotalPreparationTime() * 1000L);
                 orderService.updateStatus(order.getId(), ORDER_STATUS.PREPARED);
-                System.out.println("Order completed: " + order.getId());
+                AppLogger.info(String.format("Order completed: %d", order.getId()));
             } catch(InterruptedException e) {
                 break;
             }
