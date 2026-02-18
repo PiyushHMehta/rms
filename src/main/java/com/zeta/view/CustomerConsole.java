@@ -110,8 +110,9 @@ public class CustomerConsole {
         while(true) {
             System.out.println("1. Show menu");
             System.out.println("2. Add item");
-            System.out.println("3. Place order");
-            System.out.println("4. Checkout");
+            System.out.println("3. Show Cart");
+            System.out.println("4. Place order");
+            System.out.println("5. Checkout");
 
             int choice = inputValidation();
 
@@ -123,10 +124,13 @@ public class CustomerConsole {
                     addItem(cart);
                     break;
                 case 3:
+                    showCart(cart);
+                    break;
+                case 4:
                     placeOrder(tableId, cart);
                     cart.clear();
                     break;
-                case 4:
+                case 5:
                     List<Integer> tablesIds = new ArrayList<>();
                     tablesIds.add(tableId);
                     tableService.releaseTables(tablesIds);
@@ -163,6 +167,16 @@ public class CustomerConsole {
 
             cart.add(new OrderItems(menuItem, quantity));
             AppLogger.info(String.format("Item added: %s, quantity: %d", menuItem.getName(), quantity));
+        }
+    }
+
+    public void showCart(List<OrderItems> cart) {
+        if(cart.isEmpty()) {
+            AppLogger.info("Cart is empty");
+            return;
+        }
+        for (OrderItems item : cart) {
+            System.out.println(item.getMenuItem() + " " + item.getQuantity());
         }
     }
 
