@@ -35,7 +35,7 @@ public class CustomerConsole {
             System.out.println("3. Simulation");
             System.out.println("4. Exit");
 
-            int choice = scanner.nextInt();
+            int choice = inputValidation();
 
             switch(choice) {
                 case 1:
@@ -58,7 +58,7 @@ public class CustomerConsole {
     }
 
     public void showTables() {
-        AppLogger.info("Available tables:");
+        AppLogger.info("Tables view:");
         tableService.getAllTables().forEach(System.out::println);
     }
 
@@ -68,7 +68,7 @@ public class CustomerConsole {
             System.out.println("2. Concurrent order giving");
             System.out.println("3. Exit simulation");
 
-            int choice = scanner.nextInt();
+            int choice = inputValidation();
 
             switch(choice) {
                 case 1:
@@ -93,7 +93,7 @@ public class CustomerConsole {
 
         while(!booked) {
             System.out.println("Enter table id to book: ");
-            tableId = scanner.nextInt();
+            tableId = inputValidation();
 
             List<Integer> tableIds = new ArrayList<>();
             tableIds.add(tableId);
@@ -113,7 +113,7 @@ public class CustomerConsole {
             System.out.println("3. Place order");
             System.out.println("4. Checkout");
 
-            int choice = scanner.nextInt();
+            int choice = inputValidation();
 
             switch(choice) {
                 case 1:
@@ -147,7 +147,7 @@ public class CustomerConsole {
     public void addItem(List<OrderItems> cart) {
         while(true) {
             System.out.println("Enter menu item id, or enter 0 to exit");
-            int menuItemId = scanner.nextInt();
+            int menuItemId = inputValidation();
 
             if(menuItemId == 0) break;
 
@@ -159,7 +159,7 @@ public class CustomerConsole {
             }
 
             System.out.println("Enter quantity:");
-            int quantity = scanner.nextInt();
+            int quantity = inputValidation();
 
             cart.add(new OrderItems(menuItem, quantity));
             AppLogger.info(String.format("Item added: %s, quantity: %d", menuItem.getName(), quantity));
@@ -203,7 +203,7 @@ public class CustomerConsole {
     }
 
     public void simulateConcurrentTableBooking() {
-        int tableId = scanner.nextInt();
+        int tableId = inputValidation();
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         Runnable customer1 = () -> {
@@ -219,5 +219,16 @@ public class CustomerConsole {
         executor.submit(customer2);
 
         executor.shutdown();
+    }
+
+    public int inputValidation() {
+        while(true) {
+            String input = scanner.nextLine();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException numberFormatException) {
+                AppLogger.warning("Invalid input. Please enter a number.");
+            }
+        }
     }
 }
