@@ -1,7 +1,6 @@
 package com.zeta.service;
 
 import com.zeta.model.MenuItem;
-import com.zeta.model.ORDER_STATUS;
 import com.zeta.model.Order;
 import com.zeta.model.OrderItems;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
