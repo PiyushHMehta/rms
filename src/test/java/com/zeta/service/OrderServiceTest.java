@@ -40,7 +40,6 @@ public class OrderServiceTest {
 
     @Test
     void testGetOrdersByTable() {
-
         List<Order> t = new java.util.ArrayList<>();
         t.add(order);
         when(orderDAO.getOrdersByTable(101))
@@ -54,7 +53,6 @@ public class OrderServiceTest {
 
     @Test
     void testUpdateStatus() {
-
         orderService.updateStatus(1, ORDER_STATUS.PREPARED);
 
         verify(orderDAO).updateStatus(1, ORDER_STATUS.PREPARED);
@@ -62,7 +60,6 @@ public class OrderServiceTest {
 
     @Test
     void testGetAllOrders() {
-
         List<Order> t = new java.util.ArrayList<>();
         t.add(order);
         when(orderDAO.getAllOrders())
