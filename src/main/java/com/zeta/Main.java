@@ -7,23 +7,19 @@ import com.zeta.dao.FileTableDAO;
 import com.zeta.dao.InMemoryOrderDAO;
 import com.zeta.dao.OrderDAO;
 import com.zeta.dao.TableDAO;
-import com.zeta.io.FileHandler;
-import com.zeta.io.LocalFileHandler;
 import com.zeta.service.KitchenService;
 import com.zeta.service.OrderService;
 import com.zeta.service.TableService;
 import com.zeta.view.CustomerConsole;
 import com.zeta.view.MenuCatalog;
 
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
+    private static final int POOL_SIZE = 2;
     public static void main(String[] args) {
-        String tablePath = Paths.get("tables.txt").toAbsolutePath().toString();
-        FileHandler fileHandler = new LocalFileHandler(tablePath);
-        TableDAO tableDAO = new FileTableDAO(fileHandler);
+        TableDAO tableDAO = new FileTableDAO();
         OrderDAO orderDAO = new InMemoryOrderDAO();
 
         TableService tableService = new TableService(tableDAO);
@@ -32,11 +28,13 @@ public class Main {
 
         OrderDispatcher orderDispatcher = new OrderDispatcher();
 
-        ExecutorService waiterPool = Executors.newFixedThreadPool(2);
-        ExecutorService chefPool = Executors.newFixedThreadPool(2);
+        ExecutorService waiterPool = Executors.newFixedThreadPool(POOL_SIZE);
+        ExecutorService chefPool = Executors.newFixedThreadPool(POOL_SIZE);
 
-        waiterPool.submit(new WaiterWorker(orderDispatcher, orderService, kitchenService));
-        chefPool.submit(new ChefWorker(orderService, kitchenService));
+        for(int threads=0;threads<POOL_SIZE;threads++) {
+            waiterPool.submit(new WaiterWorker(orderDispatcher, orderService, kitchenService));
+            chefPool.submit(new ChefWorker(orderService, kitchenService));
+        }
 
         MenuCatalog menuCatalog = new MenuCatalog();
 
