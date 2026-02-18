@@ -21,8 +21,7 @@ public class FileTableDAO implements TableDAO {
                 if(!file.exists()) {
                     throw new RuntimeException("tables.json file not found at: " + FILE_NAME);
                 }
-
-                return mapper.readValue(file, new TypeReference<List<Table>>() {});
+                return mapper.readValue(file, new TypeReference<>() {});
             } catch (IOException e) {
                 throw new RuntimeException("Error reading tables.json", e);
             }
@@ -31,7 +30,7 @@ public class FileTableDAO implements TableDAO {
 
     @Override
     public void saveAllTables(List<Table> tables) {
-        synchronized (FILE_LOCK) {
+        synchronized(FILE_LOCK) {
             try {
                 mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_NAME), tables);
             } catch (IOException e) {

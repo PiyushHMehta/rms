@@ -2,7 +2,6 @@ package com.zeta.dao;
 
 import com.zeta.model.ORDER_STATUS;
 import com.zeta.model.Order;
-import com.zeta.model.Table;
 
 import java.util.ArrayList;
 import java.util.List;
