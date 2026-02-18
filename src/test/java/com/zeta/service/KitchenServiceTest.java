@@ -33,12 +33,18 @@ public class KitchenServiceTest {
     }
 
     @Test
+    void submitOrderShouldMakeOrderAvailableForTake() throws InterruptedException {
+        Order order = createSampleOrder(1);
+        kitchenService.submitOrder(order);
+        Order taken = kitchenService.takeOrder();
+        assertNotNull(taken);
+    }
+
+    @Test
     void submitOrderThenTakeOrderShouldReturnSameOrder() throws InterruptedException {
         Order order = createSampleOrder(1);
         kitchenService.submitOrder(order);
-
         Order takenOrder = kitchenService.takeOrder();
-
         assertNotNull(takenOrder);
         assertEquals(order.getId(), takenOrder.getId());
         assertEquals(order.getTableId(), takenOrder.getTableId());
@@ -48,25 +54,19 @@ public class KitchenServiceTest {
     @Test
     void concurrentOrdersSubmittedShouldBothBeProcessed() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(2);
-
         Order order1 = createSampleOrder(1);
         Order order2 = createSampleOrder(2);
-
         // submit both orders concurrently
         executor.submit(() -> kitchenService.submitOrder(order1));
         executor.submit(() -> kitchenService.submitOrder(order2));
-
         executor.shutdown();
-
         // take both orders
         Order taken1 = kitchenService.takeOrder();
         Order taken2 = kitchenService.takeOrder();
-
         // collect IDs (order not guaranteed)
         Set<Integer> takenIds = new HashSet<>();
         takenIds.add(taken1.getId());
         takenIds.add(taken2.getId());
-
         // verify both orders were processed
         Set<Integer> expected = new HashSet<>();
         expected.add(1);
@@ -77,26 +77,38 @@ public class KitchenServiceTest {
     @Test
     void manyConcurrentOrders_shouldAllBeTaken() throws Exception {
         int totalOrders = 50;
-
         ExecutorService executor = Executors.newFixedThreadPool(10);
-
-        // submit orders concurrently
         for(int i=1;i<=totalOrders;i++) {
             int id = i;
             executor.submit(() -> kitchenService.submitOrder(createSampleOrder(id)));
         }
-
         executor.shutdown();
-
-        // take all orders
         Set<Integer> takenIds = new HashSet<>();
-
         for(int i=1;i<=totalOrders;i++) {
             Order taken = kitchenService.takeOrder();
             takenIds.add(taken.getId());
         }
-
-        // verify all unique orders were processed
         assertEquals(totalOrders, takenIds.size());
     }
+
+    @Test
+    void submitMultipleOrders_ShouldMaintainFifoOrder() throws InterruptedException {
+        Order order1 = createSampleOrder(1);
+        Order order2 = createSampleOrder(2);
+        Order order3 = createSampleOrder(3);
+        kitchenService.submitOrder(order1);
+        kitchenService.submitOrder(order2);
+        kitchenService.submitOrder(order3);
+        assertEquals(1, kitchenService.takeOrder().getId());
+        assertEquals(2, kitchenService.takeOrder().getId());
+        assertEquals(3, kitchenService.takeOrder().getId());
+    }
+
+    @Test
+    void submitOrder_WithNull_ShouldThrowException() {
+        assertThrows(NullPointerException.class, () -> {
+            kitchenService.submitOrder(null);
+        });
+    }
+
 }
