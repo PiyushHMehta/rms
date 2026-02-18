@@ -1,0 +1,21 @@
+[ {
+  "id" : 1,
+  "capacity" : 4,
+  "available" : false
+}, {
+  "id" : 2,
+  "capacity" : 4,
+  "available" : false
+}, {
+  "id" : 3,
+  "capacity" : 4,
+  "available" : true
+}, {
+  "id" : 4,
+  "capacity" : 4,
+  "available" : true
+}, {
+  "id" : 5,
+  "capacity" : 4,
+  "available" : true
+} ]
