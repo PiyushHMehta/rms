@@ -22,7 +22,7 @@ public class FileTableDAO implements TableDAO {
                     throw new RuntimeException("tables.json file not found at: " + FILE_NAME);
                 }
                 return mapper.readValue(file, new TypeReference<>() {});
-            } catch (IOException e) {
+            } catch(IOException e) {
                 throw new RuntimeException("Error reading tables.json", e);
             }
         }
@@ -33,7 +33,7 @@ public class FileTableDAO implements TableDAO {
         synchronized(FILE_LOCK) {
             try {
                 mapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_NAME), tables);
-            } catch (IOException e) {
+            } catch(IOException e) {
                 throw new RuntimeException("Error writing tables.json", e);
             }
         }

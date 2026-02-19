@@ -75,7 +75,7 @@ public class KitchenServiceTest {
     }
 
     @Test
-    void manyConcurrentOrders_shouldAllBeTaken() throws Exception {
+    void manyConcurrentOrdersShouldAllBeTaken() throws Exception {
         int totalOrders = 50;
         ExecutorService executor = Executors.newFixedThreadPool(10);
         for(int i=1;i<=totalOrders;i++) {
@@ -92,7 +92,7 @@ public class KitchenServiceTest {
     }
 
     @Test
-    void submitMultipleOrders_ShouldMaintainFifoOrder() throws InterruptedException {
+    void submitMultipleOrdersShouldMaintainFifoOrder() throws InterruptedException {
         Order order1 = createSampleOrder(1);
         Order order2 = createSampleOrder(2);
         Order order3 = createSampleOrder(3);
@@ -105,10 +105,7 @@ public class KitchenServiceTest {
     }
 
     @Test
-    void submitOrder_WithNull_ShouldThrowException() {
-        assertThrows(NullPointerException.class, () -> {
-            kitchenService.submitOrder(null);
-        });
+    void submitOrderWithNullShouldThrowException() {
+        assertThrows(NullPointerException.class, () -> kitchenService.submitOrder(null));
     }
-
 }

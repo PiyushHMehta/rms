@@ -175,8 +175,8 @@ public class CustomerConsole {
             AppLogger.info("Cart is empty");
             return;
         }
-        for (OrderItems item : cart) {
-            System.out.println(item.getMenuItem() + " " + item.getQuantity());
+        for(OrderItems item : cart) {
+            System.out.println(item.getMenuItem() + " , Quantity: " + item.getQuantity());
         }
     }
 
@@ -240,7 +240,7 @@ public class CustomerConsole {
             String input = scanner.nextLine();
             try {
                 return Integer.parseInt(input);
-            } catch (NumberFormatException numberFormatException) {
+            } catch(NumberFormatException numberFormatException) {
                 AppLogger.warning("Invalid input. Please enter a number.");
             }
         }
